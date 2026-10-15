@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Préparer votre brief créatif</title>
+<style>
+:root{
+  --brand:#3E5A7F; --brand-soft:#E8EEF5; --on-brand:#FFFFFF;
+  --text:#1F2933; --muted:#5B6670; --border:#D5DBE1;
+  --bg:#FFFFFF; --surface:#F6F7F9;
+  --danger:#B42318; --warning:#8A5A00; --warning-soft:#FFF6E0;
+  --radius:10px;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:26px;font-weight:600;margin:0 0 6px}
+h2{font-size:20px;font-weight:600;margin:0 0 20px}
+h3{font-size:16px;font-weight:600;margin:24px 0 8px}
+.intro{color:var(--muted);margin:0 0 24px}
+.prog{display:flex;gap:4px;margin-bottom:8px}
+.prog span{flex:1;height:5px;border-radius:3px;background:var(--border)}
+.prog span.on{background:var(--brand)}
+.stepno{font-size:13px;color:var(--muted);margin:16px 0 4px}
+.field{margin-bottom:26px}
+.lbl{display:block;font-weight:600;font-size:15px;margin:0 0 10px}
+.req{color:var(--danger);margin-left:2px}
+input[type=text],textarea{width:100%;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text)}
+textarea{resize:vertical;min-height:84px}
+input[type=text]:focus,textarea:focus,button:focus-visible,input[type=range]:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+input[type=range]{width:100%;accent-color:var(--brand)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:14px;padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
+.chip:hover{border-color:var(--brand)}
+.chip[aria-pressed="true"]{background:var(--brand);color:var(--on-brand);border-color:var(--brand)}
+.chip[aria-pressed="true"]::before{content:"✓ ";font-weight:600}
+.chip.rank[aria-pressed="true"]::before{content:none}
+.rk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--on-brand);color:var(--brand);font-size:12px;font-weight:600;margin-right:6px}
+.hint{font-size:13px;color:var(--muted);margin:6px 0 0}
+.err{font-size:13px;color:var(--danger);margin:6px 0 0;min-height:1px}
+.warn{font-size:13px;color:var(--warning);background:var(--warning-soft);padding:8px 12px;border-radius:var(--radius);margin:8px 0 0}
+.range-row{display:flex;align-items:center;gap:14px}
+.range-val{font-size:22px;font-weight:600;min-width:52px;text-align:right}
+.range-ends{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:4px}
+.scale{display:grid;grid-template-columns:120px minmax(0,1fr) 120px;gap:12px;align-items:center;margin-bottom:12px;font-size:14px;color:var(--muted)}
+.scale .l{text-align:right}
+.addrow{display:flex;gap:8px;margin-top:10px}
+.addrow input{flex:1}
+.btn{font:inherit;font-size:15px;padding:10px 18px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
+.btn:hover{border-color:var(--brand)}
+.btn-primary{background:var(--brand);color:var(--on-brand);border-color:var(--brand)}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:8px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.card{border:1px solid var(--border);border-radius:14px;padding:24px;margin-top:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0 8px}
+.kpi{background:var(--surface);border-radius:var(--radius);padding:12px 14px}
+.kpi .k{font-size:13px;color:var(--muted);margin:0}
+.kpi .v{font-size:18px;font-weight:600;margin:2px 0 0}
+.bar{position:relative;height:6px;border-radius:3px;background:var(--border)}
+.bar span{position:absolute;top:-5px;width:16px;height:16px;border-radius:50%;background:var(--brand)}
+.tag{display:inline-block;font-size:13px;padding:4px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--border);margin:0 6px 6px 0}
+.tag.to{background:var(--brand-soft);border-color:var(--brand-soft);color:var(--brand)}
+.sec-row{display:grid;grid-template-columns:200px minmax(0,1fr);gap:12px;font-size:14px;padding:6px 0;border-bottom:1px solid var(--surface)}
+.sec-row .k{color:var(--muted)}
+.vig{display:flex;gap:8px;font-size:14px;margin:0 0 8px}
+.msg{font-size:13px;color:var(--muted);min-height:20px;margin-top:6px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:560px){.scale{grid-template-columns:80px minmax(0,1fr) 80px}.sec-row{grid-template-columns:1fr}}
+@media print{
+  .no-print{display:none!important}
+  .wrap{padding:0;max-width:none}
+  .card{border:none;padding:0}
+  .kpi{border:1px solid var(--border)}
+  h3{break-after:avoid}
+  .sec-row,.vig{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="no-print">
+    <h1>Préparer votre brief créatif</h1>
+    <p class="intro">Huit étapes pour clarifier votre projet d'identité. Vos réponses restent dans votre navigateur.</p>
+  </header>
+  <div id="prog" class="prog no-print" aria-hidden="true"></div>
+  <div id="step" aria-live="polite"></div>
+  <div id="nav" class="no-print"></div>
+</main>
+<script>
+const CONFIG = {
+  contactEmail: "",
+  storageKey: "brief-creatif-v1"
+};
+
+const WORDS = ["Proche","Fiable","Moderne","Chaleureuse","Experte","Engagée","Dynamique","Rassurante","Innovante","Accessible","Solide","Créative","Discrète","Ambitieuse","Militante","Ludique"];
+
+const STEPS = [
+  {t:"La structure", f:[
+    {k:"nom", type:"text", l:"Nom de la structure", ph:"Association Les Tilleuls", req:true},
+    {k:"secteur", type:"text", l:"Secteur d'activité", ph:"Aide à domicile, culture, sport…"},
+    {k:"diff", type:"area", l:"En une phrase : que faites-vous mieux ou autrement que les autres ?", ph:"Nous construisons avec chaque famille un accompagnement qui évolue.", req:true}
+  ]},
+  {t:"Le projet", f:[
+    {k:"type", type:"one", l:"De quoi avez-vous besoin ?", o:["Créer une identité","Faire évoluer l'existante","Refondre complètement","Décliner sur de nouveaux supports"], req:true},
+    {k:"curseur", type:"range", l:"Ampleur du changement souhaité", min:1, max:10, v:5, a:"Personne ne doit le remarquer", b:"On doit sentir un vrai renouveau"},
+    {k:"pourquoi", type:"area", l:"Pourquoi maintenant ?", ph:"Fusion, nouveau service, identité vieillissante…"}
+  ]},
+  {t:"Les publics", f:[
+    {k:"publics", type:"rank", l:"Choisissez vos 3 publics prioritaires, dans l'ordre", o:["Clients ou usagers","Familles et proches","Prescripteurs et partenaires","Financeurs et institutions","Candidats et salariés","Bénévoles","Grand public","Presse"], max:3, req:true},
+    {k:"question", type:"area", l:"Quelle est la vraie question de votre public n°1 ?", ph:"Puis-je vous faire confiance avec mon proche ?"}
+  ]},
+  {t:"La personnalité", f:[
+    {k:"axes", type:"scales", l:"Placez chaque curseur là où votre marque doit être demain", o:[["Classique","Audacieuse"],["Sobre","Expressive"],["Institutionnelle","Proche"],["Sérieuse","Ludique"],["Locale","Nationale"]]},
+    {k:"auj", type:"words", l:"3 mots qui vous décrivent aujourd'hui", max:3},
+    {k:"dem", type:"words", l:"3 mots qu'on doit associer à vous demain", max:3, req:true}
+  ]},
+  {t:"L'héritage", f:[
+    {k:"garder", type:"multi", l:"Ce qui est intouchable", o:["Le nom","Le logo","Les couleurs","La typographie","Le slogan","Rien, tout est ouvert"]},
+    {k:"attache", type:"one", l:"Vos équipes sont-elles attachées à l'identité actuelle ?", o:["Très attachées","Un peu","Pas du tout","Je ne sais pas"]},
+    {k:"droits", type:"one", l:"Êtes-vous propriétaire des droits sur votre logo actuel ?", o:["Oui, cession écrite","Non","Je ne sais pas","Pas de logo actuel"]}
+  ]},
+  {t:"Les usages", f:[
+    {k:"supports", type:"multi", l:"Où la marque doit-elle vivre ?", o:["Réseaux sociaux","Site internet","Signalétique","Véhicules","Imprimés","Documents internes","Application ou favicon","Tenues","Goodies","Événements"], req:true},
+    {k:"tech", type:"multi", l:"Contraintes particulières", o:["Impression noir et blanc","Très petites tailles","Public âgé ou malvoyant","Broderie ou gravure","Plusieurs services à distinguer","Co-marquage avec un partenaire"]},
+    {k:"gal", type:"area", l:"Où votre identité actuelle vous pose-t-elle problème ?", ph:"Le logo est trop large pour les bannières…"}
+  ]},
+  {t:"Les inspirations", f:[
+    {k:"aime", type:"area", l:"Des marques que vous admirez, tous secteurs confondus, et pourquoi", ph:"Decathlon : tout est cohérent, du magasin à l'appli."},
+    {k:"conc", type:"area", l:"Vos concurrents ou voisins visuels", ph:"Les autres associations du territoire…"},
+    {k:"eviter", type:"area", l:"Ce que vous ne voulez surtout pas", ph:"Une maison avec un cœur, du clipart…"}
+  ]},
+  {t:"Les moyens", f:[
+    {k:"budget", type:"one", l:"Budget envisagé", o:["Moins de 2 000 €","2 000 à 5 000 €","5 000 à 15 000 €","Plus de 15 000 €","À définir"]},
+    {k:"delai", type:"one", l:"Délai souhaité", o:["Moins d'un mois","1 à 3 mois","3 à 6 mois","Pas d'urgence"]},
+    {k:"valid", type:"text", l:"Qui valide au final ?", ph:"Bureau, conseil d'administration…", req:true}
+  ]}
+];
+
+const FIELDS = {};
+STEPS.forEach(s => s.f.forEach(f => FIELDS[f.k] = f));
+const $ = id => document.getElementById(id);
+let st = {}, cur = 0, briefText = "";
+
+function fresh() {
+  const s = {};
+  STEPS.forEach(step => step.f.forEach(f => {
+    if (f.type === "range") s[f.k] = f.v;
+    else if (f.type === "scales") s[f.k] = f.o.map(() => 50);
+    else if (["multi","words","rank"].includes(f.type)) s[f.k] = [];
+    else s[f.k] = "";
+  }));
+  return s;
+}
+function save() { try { localStorage.setItem(CONFIG.storageKey, JSON.stringify({st, cur})); } catch (e) {} }
+function load() {
+  st = fresh(); cur = 0;
+  try {
+    const d = JSON.parse(localStorage.getItem(CONFIG.storageKey));
+    if (d && d.st) { st = Object.assign(st, d.st); cur = Math.min(d.cur || 0, STEPS.length); }
+  } catch (e) {}
+}
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+}
+function setErr(k, t) { const e = $("err-" + k); if (e) e.textContent = t || ""; }
+
+function chips(f) {
+  const v = st[f.k];
+  const opts = f.type === "words" ? WORDS.concat(v.filter(x => !WORDS.includes(x))) : f.o;
+  return '<div class="chips" role="group" aria-labelledby="lbl-' + f.k + '">' + opts.map(o => {
+    const sel = f.type === "one" ? v === o : v.includes(o);
+    const badge = f.type === "rank" && sel ? '<span class="rk">' + (v.indexOf(o) + 1) + '</span>' : "";
+    const cls = "chip" + (f.type === "rank" ? " rank" : "");
+    return '<button type="button" class="' + cls + '" aria-pressed="' + sel + '" data-c="' + f.k + '" data-v="' + esc(o) + '">' + badge + esc(o) + '</button>';
+  }).join("") + '</div>';
+}
+
+function field(f) {
+  const v = st[f.k];
+  let h = '<div class="field"><span class="lbl" id="lbl-' + f.k + '">' + esc(f.l) + (f.req ? '<span class="req" aria-hidden="true">*</span>' : "") + '</span>';
+  if (f.type === "text") {
+    h += '<input type="text" id="in-' + f.k + '" data-k="' + f.k + '" aria-labelledby="lbl-' + f.k + '" placeholder="' + esc(f.ph) + '" value="' + esc(v) + '">';
+  } else if (f.type === "area") {
+    h += '<textarea id="in-' + f.k + '" data-k="' + f.k + '" aria-labelledby="lbl-' + f.k + '" rows="3" placeholder="' + esc(f.ph) + '">' + esc(v) + '</textarea>';
+  } else if (f.type === "range") {
+    h += '<div class="range-row"><input type="range" min="' + f.min + '" max="' + f.max + '" step="1" value="' + v + '" data-r="' + f.k + '" aria-labelledby="lbl-' + f.k + '"><span class="range-val" id="o-' + f.k + '">' + v + '/10</span></div>'
+       + '<div class="range-ends"><span>' + esc(f.a) + '</span><span>' + esc(f.b) + '</span></div>';
+  } else if (f.type === "scales") {
+    h += f.o.map((p, i) => '<div class="scale"><span class="l">' + esc(p[0]) + '</span><input type="range" min="0" max="100" step="1" value="' + v[i] + '" data-s="' + f.k + '" data-i="' + i + '" aria-label="' + esc(p[0] + " ou " + p[1]) + '"><span>' + esc(p[1]) + '</span></div>').join("");
+  } else {
+    h += chips(f);
+    if (f.type === "words") {
+      h += '<div class="addrow"><input type="text" id="cw-' + f.k + '" placeholder="Un autre mot" aria-label="Ajouter un mot"><button type="button" class="btn" data-add="' + f.k + '">Ajouter</button></div>'
+         + '<p class="hint">' + v.length + '/' + f.max + ' mots choisis</p>';
+    }
+    if (f.type === "rank") h += '<p class="hint">Cliquez dans l\'ordre de priorité. Cliquez à nouveau pour retirer.</p>';
+  }
+  if (f.k === "droits" && (v === "Non" || v === "Je ne sais pas")) {
+    h += '<p class="warn">À vérifier avant tout : modifier un logo sans cession de droits peut poser problème.</p>';
+  }
+  return h + '<p class="err" id="err-' + f.k + '"></p></div>';
+}
+
+function render(focusSel) {
+  $("prog").innerHTML = STEPS.map((s, i) => '<span class="' + (i <= cur ? "on" : "") + '"></span>').join("");
+  if (cur >= STEPS.length) return renderBrief();
+  const s = STEPS[cur];
+  $("step").innerHTML = '<p class="stepno">Étape ' + (cur + 1) + ' sur ' + STEPS.length + '</p><h2>' + esc(s.t) + '</h2>' + s.f.map(field).join("");
+  $("nav").innerHTML = '<div class="nav">' + (cur > 0 ? '<button type="button" class="btn" id="prev">← Retour</button>' : '<span></span>')
+    + '<button type="button" class="btn btn-primary" id="next">' + (cur === STEPS.length - 1 ? "Générer le brief" : "Suivant →") + '</button></div>';
+  bind();
+  if (focusSel) { const el = document.querySelector(focusSel); if (el) el.focus(); }
+  save();
+}
+
+function bind() {
+  const root = $("step");
+  root.querySelectorAll("[data-k]").forEach(el => el.addEventListener("input", () => { st[el.dataset.k] = el.value; setErr(el.dataset.k); save(); }));
+  root.querySelectorAll("[data-r]").forEach(el => el.addEventListener("input", () => { st[el.dataset.r] = +el.value; $("o-" + el.dataset.r).textContent = el.value + "/10"; save(); }));
+  root.querySelectorAll("[data-s]").forEach(el => el.addEventListener("input", () => { st[el.dataset.s][+el.dataset.i] = +el.value; save(); }));
+  root.querySelectorAll("[data-c]").forEach(el => el.addEventListener("click", () => {
+    const k = el.dataset.c, v = el.dataset.v, f = FIELDS[k];
+    if (f.type === "one") st[k] = v;
+    else {
+      const a = st[k], i = a.indexOf(v);
+      if (i >= 0) a.splice(i, 1);
+      else {
+        if (f.max && a.length >= f.max) { setErr(k, f.max + " choix maximum. Retirez-en un d'abord."); return; }
+        a.push(v);
+      }
+    }
+    render('[data-c="' + k + '"][data-v="' + CSS.escape(v) + '"]');
+  }));
+  root.querySelectorAll("[data-add]").forEach(el => {
+    const k = el.dataset.add, inp = $("cw-" + k);
+    const add = () => {
+      const v = inp.value.trim();
+      if (!v) { setErr(k, "Écrivez un mot d'abord."); return; }
+      if (st[k].length >= FIELDS[k].max) { setErr(k, FIELDS[k].max + " mots maximum. Retirez-en un d'abord."); return; }
+      if (!st[k].includes(v)) st[k].push(v);
+      render("#cw-" + k);
+    };
+    el.addEventListener("click", add);
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); add(); } });
+    inp.addEventListener("input", () => setErr(k));
+  });
+  const p = $("prev"); if (p) p.addEventListener("click", () => { cur--; render(); window.scrollTo(0, 0); });
+  $("next").addEventListener("click", () => { if (validate()) { cur++; render(); window.scrollTo(0, 0); } });
+}
+
+function validate() {
+  let first = null;
+  STEPS[cur].f.forEach(f => {
+    if (!f.req) return;
+    const v = st[f.k];
+    const ok = Array.isArray(v) ? v.length > 0 : String(v || "").trim() !== "";
+    if (!ok) { setErr(f.k, "Répondez à cette question pour continuer."); if (!first) first = f.k; }
+  });
+  if (first) {
+    const el = $("in-" + first) || document.querySelector('[data-c="' + first + '"]');
+    if (el) el.focus();
+    return false;
+  }
+  return true;
+}
+
+function level(c) { return c <= 3 ? "évolution légère" : c <= 7 ? "rafraîchissement" : "refonte en profondeur"; }
+
+function vigilance() {
+  const v = [], t = st.tech, c = st.curseur;
+  if (st.droits === "Non" || st.droits === "Je ne sais pas") v.push("Vérifier la propriété des droits sur le logo avant tout travail.");
+  if (c >= 8 && st.attache === "Très attachées") v.push("Ambition forte mais équipes attachées : prévoir une vraie pédagogie du changement.");
+  if (c >= 8 && st.budget === "Moins de 2 000 €") v.push("Ambition élevée pour le budget : prioriser les supports et phaser le déploiement.");
+  if (t.includes("Public âgé ou malvoyant")) v.push("Accessibilité : contrastes d'au moins 4,5, typographie très lisible, tailles généreuses.");
+  if (t.includes("Co-marquage avec un partenaire")) v.push("Prévoir une version endossée du logo et des règles de co-marquage.");
+  if (t.includes("Plusieurs services à distinguer")) v.push("Construire un système de déclinaison des services sans morceler la marque.");
+  if (t.includes("Impression noir et blanc") || t.includes("Broderie ou gravure")) v.push("Le logo doit fonctionner en une seule couleur dès la première esquisse.");
+  if (st.garder.includes("Le logo") && c >= 7) v.push("Le logo est déclaré intouchable mais l'ambition est forte : clarifier ce point en premier.");
+  if (st.garder.includes("Rien, tout est ouvert") && st.garder.length > 1) v.push("Réponses contradictoires sur ce qui est intouchable : à clarifier.");
+  if (st.delai === "Moins d'un mois" && c >= 7) v.push("Délai très court pour une refonte : envisager un déploiement en deux temps.");
+  return v;
+}
+
+function sections() {
+  const s = st, ax = FIELDS.axes.o, d = x => (x && String(x).trim()) || "–", j = a => a.length ? a.join(", ") : "–";
+  return [
+    {h:"1. La structure", r:[["Secteur", d(s.secteur)], ["Ce qui nous distingue", d(s.diff)]]},
+    {h:"2. Le projet", r:[["Besoin", d(s.type)], ["Ampleur", s.curseur + "/10 (" + level(s.curseur) + ")"], ["Pourquoi maintenant", d(s.pourquoi)]]},
+    {h:"3. Les publics", r:[["Publics prioritaires", s.publics.map((p, i) => (i + 1) + ". " + p).join("  ")], ["Question clé du public n°1", d(s.question)]]},
+    {h:"4. La personnalité", r: ax.map((p, i) => [p[0] + " / " + p[1], s.axes[i] + "/100"]).concat([["Aujourd'hui", j(s.auj)], ["Demain", j(s.dem)]])},
+    {h:"5. L'héritage", r:[["Intouchable", j(s.garder)], ["Attachement des équipes", d(s.attache)], ["Droits sur le logo", d(s.droits)]]},
+    {h:"6. Les usages", r:[["Supports", j(s.supports)], ["Contraintes", j(s.tech)], ["Problèmes actuels", d(s.gal)]]},
+    {h:"7. Les inspirations", r:[["Marques admirées", d(s.aime)], ["Concurrents", d(s.conc)], ["À éviter", d(s.eviter)]]},
+    {h:"8. Les moyens", r:[["Budget", d(s.budget)], ["Délai", d(s.delai)], ["Validation", d(s.valid)]]}
+  ];
+}
+
+function renderBrief() {
+  const s = st, ax = FIELDS.axes.o, v = vigilance(), secs = sections();
+  const date = new Date().toLocaleDateString("fr-FR");
+  briefText = "BRIEF CRÉATIF – " + s.nom + " (" + date + ")\n"
+    + secs.map(x => "\n" + x.h + "\n" + x.r.map(r => r[0] + " : " + r[1]).join("\n")).join("\n")
+    + (v.length ? "\n\nPoints de vigilance\n" + v.map(x => "- " + x).join("\n") : "");
+  const bars = ax.map((p, i) => '<div class="scale"><span class="l">' + esc(p[0]) + '</span><div class="bar"><span style="left:calc(' + s.axes[i] + '% - 8px)"></span></div><span>' + esc(p[1]) + '</span></div>').join("");
+  $("step").innerHTML = '<div class="card">'
+    + '<p class="stepno">Brief créatif · ' + date + '</p><h2 style="margin-bottom:4px">' + esc(s.nom) + '</h2><p class="intro" style="margin-bottom:8px">' + esc(s.diff) + '</p>'
+    + '<div class="kpis"><div class="kpi"><p class="k">Ampleur</p><p class="v">' + s.curseur + '/10</p><p class="k">' + level(s.curseur) + '</p></div>'
+    + '<div class="kpi"><p class="k">Public n°1</p><p class="v">' + esc(s.publics[0]) + '</p></div>'
+    + '<div class="kpi"><p class="k">Budget et délai</p><p class="v">' + esc(s.budget || "À définir") + '</p><p class="k">' + esc(s.delai || "–") + '</p></div></div>'
+    + '<h3>Personnalité visée</h3>' + bars
+    + '<h3>De… à…</h3><div>' + (s.auj.length ? s.auj : ["non renseigné"]).map(w => '<span class="tag">' + esc(w) + '</span>').join("") + '<span aria-hidden="true" style="margin:0 8px 0 2px">→</span>' + s.dem.map(w => '<span class="tag to">' + esc(w) + '</span>').join("") + '</div>'
+    + (v.length ? '<h3>Points de vigilance</h3>' + v.map(x => '<p class="vig"><span aria-hidden="true" style="color:var(--warning)">⚠</span><span>' + esc(x) + '</span></p>').join("") : "")
+    + secs.map(x => '<h3>' + esc(x.h) + '</h3>' + x.r.map(r => '<div class="sec-row"><span class="k">' + esc(r[0]) + '</span><span>' + esc(r[1]) + '</span></div>').join("")).join("")
+    + '</div>';
+  $("nav").innerHTML = '<div class="actions">'
+    + '<button type="button" class="btn btn-primary" id="pdf">Télécharger en PDF</button>'
+    + '<button type="button" class="btn" id="cp">Copier le brief</button>'
+    + '<button type="button" class="btn" id="mail">Envoyer par e-mail</button>'
+    + '<button type="button" class="btn" id="ed">Modifier</button>'
+    + '<button type="button" class="btn" id="rs">Recommencer</button></div><p class="msg" id="msg" role="status"></p>';
+  $("pdf").addEventListener("click", () => window.print());
+  $("cp").addEventListener("click", copyBrief);
+  $("mail").addEventListener("click", () => {
+    window.location.href = "mailto:" + CONFIG.contactEmail + "?subject=" + encodeURIComponent("Brief créatif – " + s.nom) + "&body=" + encodeURIComponent(briefText);
+  });
+  $("ed").addEventListener("click", () => { cur = STEPS.length - 1; render(); });
+  $("rs").addEventListener("click", () => {
+    if (!confirm("Effacer toutes les réponses et recommencer ?")) return;
+    try { localStorage.removeItem(CONFIG.storageKey); } catch (e) {}
+    st = fresh(); cur = 0; render(); window.scrollTo(0, 0);
+  });
+  save();
+}
+
+function copyBrief() {
+  const done = () => { $("msg").textContent = "Brief copié"; };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(briefText).then(done, fallback);
+  } else fallback();
+  function fallback() {
+    const ta = document.createElement("textarea");
+    ta.value = briefText; ta.style.position = "absolute"; ta.style.left = "-9999px";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) { $("msg").textContent = "Copie impossible, sélectionnez le texte manuellement."; }
+    ta.remove();
+  }
+}
+
+load();
+render();
+</script>
+</body>
+</html>
