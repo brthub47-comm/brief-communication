@@ -205,3 +205,17 @@
 }
 @media (max-width:560px){#brief-app .bc-tpls{grid-template-columns:1fr 1fr;gap:10px}#brief-app .bc-tpl{padding:16px;min-height:200px}#brief-app .bc-hero{font-size:28px}}
 @media print{#brief-app .bc-sent{display:none}}
+
+/* v1.4 : la couleur de la carte choisie se retrouve dans tout le questionnaire */
+#brief-app{--bc-tint:#ECE8DF}
+#brief-app .bc-prog span{background:var(--bc-tint)}
+#brief-app .bc-prog span.bc-on{background:var(--bc-brand)}
+#brief-app .bc-live{background:var(--bc-tint)}
+#brief-app .bc-live .bc-live-t{color:var(--bc-text)}
+#brief-app .bc-live .bc-lr{border-bottom-color:rgba(22,24,29,.12)}
+#brief-app .bc-live .bc-k,#brief-app .bc-kpi .bc-k{color:#3A3C42}
+#brief-app .bc-kpi{background:var(--bc-tint)}
+#brief-app .bc-sh{border-bottom-color:var(--bc-tint)}
+#brief-app .bc-seg{background:var(--bc-tint)}
+#brief-app .bc-arcb.bc-on .bc-arcp{background:var(--bc-tint)}
+#brief-app .bc-chip:hover{background:var(--bc-tint)}

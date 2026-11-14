@@ -148,8 +148,8 @@ var INT_STEPS = [
 ];
 
 window.BRIEF_TEMPLATES = {
-  identite: {id:"identite", t:"Identité visuelle", d:"Créer, faire évoluer ou décliner un logo et une identité de marque.", min:10, steps:IDENT_STEPS, n:"type", p:"publics", lead:"diff", vig:identVig},
-  communication: {id:"communication", t:"Plan de communication", d:"Définir objectifs, publics, message, ton et canaux d'une action de communication.", min:10, steps:COMM_STEPS, n:"objectifs", p:"publics", lead:"obj",
+  identite: {id:"identite", c:{tint:"#FCE3D2", deep:"#B4491A"}, t:"Identité visuelle", d:"Créer, faire évoluer ou décliner un logo et une identité de marque.", min:10, steps:IDENT_STEPS, n:"type", p:"publics", lead:"diff", vig:identVig},
+  communication: {id:"communication", c:{tint:"#DCDCFB", deep:"#3D3BF3"}, t:"Plan de communication", d:"Définir objectifs, publics, message, ton et canaux d'une action de communication.", min:10, steps:COMM_STEPS, n:"objectifs", p:"publics", lead:"obj",
     vig:function (s) {
       var v = [];
       if (n(s.objectifs) >= 3) v.push("Trois objectifs choisis : désigner un objectif principal, sinon le message se dilue.");
@@ -159,7 +159,7 @@ window.BRIEF_TEMPLATES = {
       if (s.delai === DELAI[0] && n(s.canaux) >= 3) v.push("Délai court pour plusieurs canaux : envisager un lancement en deux temps.");
       return v;
     }},
-  marketing: {id:"marketing", t:"Stratégie marketing", d:"Cadrer offre, cible, positionnement et leviers pour une action commerciale.", min:10, steps:MKT_STEPS, n:"mkobj", p:"publics", lead:"offre",
+  marketing: {id:"marketing", c:{tint:"#C4EDE5", deep:"#0F766E"}, t:"Stratégie marketing", d:"Cadrer offre, cible, positionnement et leviers pour une action commerciale.", min:10, steps:MKT_STEPS, n:"mkobj", p:"publics", lead:"offre",
     vig:function (s) {
       var v = [];
       if (!/\d/.test(s.kpi || "")) v.push("L'objectif n'est pas chiffré : sans chiffre, impossible de mesurer le résultat.");
@@ -168,7 +168,7 @@ window.BRIEF_TEMPLATES = {
       if ((s.persona || "").trim().length < 40) v.push("Client idéal décrit très brièvement : le préciser pour guider les messages et les canaux.");
       return v;
     }},
-  interne: {id:"interne", t:"Demande interne", d:"Formulaire rapide pour demander un visuel, un document ou un contenu.", min:3, steps:INT_STEPS, n:"livrable", p:"cible", lead:"demande",
+  interne: {id:"interne", c:{tint:"#FFB3AD", deep:"#B8325A"}, t:"Demande interne", d:"Formulaire rapide pour demander un visuel, un document ou un contenu.", min:3, steps:INT_STEPS, n:"livrable", p:"cible", lead:"demande",
     vig:function (s) {
       var v = [];
       if (s.delai === "Urgent (sous 48 h)" && n(s.livrable) >= 2) v.push("Délai de 48 h pour plusieurs livrables : en prioriser un.");

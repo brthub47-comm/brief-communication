@@ -49,7 +49,14 @@
   }
   function enc(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
   function dec(x) { return JSON.parse(decodeURIComponent(escape(atob(x.replace(/-/g, "+").replace(/_/g, "/"))))); }
-  function setT(k) { if (TPLS[k]) { st._t = k; STEPS = TPLS[k].steps; } else { st._t = ""; STEPS = []; } }
+  function setT(k) { if (TPLS[k]) { st._t = k; STEPS = TPLS[k].steps; } else { st._t = ""; STEPS = []; } applyTheme(); }
+  // Chaque modèle reprend la couleur de sa carte : teinte pastel + ton foncé pour les éléments actifs.
+  function applyTheme() {
+    const T = TPLS[st._t], own = /^#[0-9a-f]{6}$/i.test(CONFIG.brandColor);
+    app.style.setProperty("--bc-brand", own ? CONFIG.brandColor : (T && T.c ? T.c.deep : "#3D3BF3"));
+    app.style.setProperty("--bc-tint", T && T.c ? T.c.tint : "#ECE8DF");
+  }
+  const isMobile = () => !!window.matchMedia && window.matchMedia("(max-width:899px)").matches;
   function load() {
     st = fresh(); cur = 0;
     try {
@@ -121,7 +128,7 @@
     if (f.type === "one") {
       const L = Math.max.apply(null, f.o.map(o => o.length));
       if (f.o.length <= 3 && L <= 14) return segmented(f);
-      if (f.o.length >= 4 && f.o.length <= 6 && L <= 24) return arc(f);
+      if (f.o.length >= 4 && f.o.length <= 6 && L <= 24 && isMobile()) return arc(f);
     }
     const opts = f.type === "words" ? WORDS.concat(v.filter(x => !WORDS.includes(x))) : f.o;
     return '<div class="bc-chips" role="group" aria-labelledby="bc-lbl-' + f.k + '">' + opts.map(o => {
@@ -263,7 +270,7 @@ const mins = Math.max(1, Math.round((STEPS.length - cur) * (TPL().min || 10) / S
   function renderChooser() {
     el("prog").innerHTML = "";
     el("step").innerHTML = '<h3 class="bc-h bc-hero">De quel brief avez-vous besoin ?</h3><div class="bc-tpls">'
-      + Object.keys(TPLS).map((k, i) => '<button type="button" class="bc-tpl bc-p' + (i % 4) + '" data-t="' + esc(k) + '"><span class="bc-tpl-n">0' + (i + 1) + '</span><span class="bc-tpl-t">' + esc(TPLS[k].t)
+      + Object.keys(TPLS).map((k, i) => '<button type="button" class="bc-tpl bc-p' + (i % 4) + '"' + (TPLS[k].c ? ' style="background:' + TPLS[k].c.tint + '"' : "") + ' data-t="' + esc(k) + '"><span class="bc-tpl-n">0' + (i + 1) + '</span><span class="bc-tpl-t">' + esc(TPLS[k].t)
         + '</span><span class="bc-tpl-d">' + esc(TPLS[k].d) + '</span><span class="bc-tpl-m">' + TPLS[k].steps.length + ' étapes · ' + esc(TPLS[k].min) + ' min</span><span class="bc-tpl-go">Commencer →</span></button>').join("") + '</div>';
     el("nav").innerHTML = '<div class="bc-navrow"><span><button type="button" class="bc-btn" id="bc-impb">Importer un brief</button><input type="file" id="bc-imp" accept=".json,application/json" hidden></span></div>';
     el("step").querySelectorAll("[data-t]").forEach(b => b.addEventListener("click", () => { setT(b.dataset.t); cur = 0; render(); toTop(); }));
@@ -390,7 +397,7 @@ const mins = Math.max(1, Math.round((STEPS.length - cur) * (TPL().min || 10) / S
     return new Blob(parts.concat(cen, [new Uint8Array(e.buffer)]), { type: mime });
   }
   function docxBlob(secs) {
-    const BR = (/^#[0-9a-f]{6}$/i.test(CONFIG.brandColor) ? CONFIG.brandColor : "#3E5A7F").slice(1);
+    const bc = app.style.getPropertyValue("--bc-brand").trim(), BR = (/^#[0-9a-f]{6}$/i.test(bc) ? bc : "#3E5A7F").slice(1);
     const x = t => String(t == null ? "" : t).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
     const run = (t, o) => '<w:r><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>' + (o.b ? "<w:b/>" : "") + (o.c ? '<w:color w:val="' + o.c + '"/>' : "") + '<w:sz w:val="' + (o.z || 22) + '"/></w:rPr>'
       + x(t).split(/\r?\n/).map(l => '<w:t xml:space="preserve">' + l + "</w:t>").join("<w:br/>") + "</w:r>";
@@ -459,4 +466,8 @@ const mins = Math.max(1, Math.round((STEPS.length - cur) * (TPL().min || 10) / S
   load();
   render();
   ready = true;
+  if (window.matchMedia) {   // l'arc n'existe que sur mobile : on rafraîchit au passage du seuil
+    const mq = window.matchMedia("(max-width:899px)"), onMq = () => { if (st._t && cur < STEPS.length) render(); };
+    if (mq.addEventListener) mq.addEventListener("change", onMq); else if (mq.addListener) mq.addListener(onMq);
+  }
 })();
