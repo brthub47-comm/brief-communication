@@ -1,0 +1,98 @@
+#brief-app{
+  --bc-brand:#3E5A7F; --bc-brand-soft:#E8EEF5; --bc-on-brand:#FFFFFF;
+  --bc-text:#1F2933; --bc-muted:#5B6670; --bc-border:#D5DBE1;
+  --bc-bg:#FFFFFF; --bc-surface:#F6F7F9;
+  --bc-danger:#B42318; --bc-warning:#8A5A00; --bc-warning-soft:#FFF6E0;
+  --bc-radius:10px;
+  --bc-font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  max-width:760px;margin:0 auto;padding:8px 0 48px;
+  font-family:var(--bc-font);font-size:16px;line-height:1.6;color:var(--bc-text);text-align:left;
+}
+#brief-app *{box-sizing:border-box}
+#brief-app p{margin:0}
+#brief-app button{
+  font:inherit;text-transform:none;letter-spacing:normal;box-shadow:none;
+  line-height:1.4;margin:0;min-height:0;width:auto;text-decoration:none;
+}
+#brief-app .bc-title{font-size:26px;font-weight:600;line-height:1.3;margin:0 0 6px;color:var(--bc-text)}
+#brief-app .bc-h{font-size:20px;font-weight:600;line-height:1.3;margin:0 0 20px;color:var(--bc-text)}
+#brief-app .bc-h3{font-size:16px;font-weight:600;margin:24px 0 8px;color:var(--bc-text)}
+#brief-app .bc-intro{color:var(--bc-muted);margin:0 0 24px}
+#brief-app .bc-prog{display:flex;gap:4px;margin-bottom:8px}
+#brief-app .bc-prog span{flex:1;height:5px;border-radius:3px;background:var(--bc-border)}
+#brief-app .bc-prog span.bc-on{background:var(--bc-brand)}
+#brief-app .bc-stepno{font-size:13px;color:var(--bc-muted);margin:16px 0 4px}
+#brief-app .bc-field{margin-bottom:26px}
+#brief-app .bc-lbl{display:block;font-weight:600;font-size:15px;margin:0 0 10px}
+#brief-app .bc-req{color:var(--bc-danger);margin-left:2px}
+#brief-app input[type=text],#brief-app textarea{
+  width:100%;font:inherit;font-size:15px;padding:10px 12px;margin:0;
+  border:1px solid var(--bc-border);border-radius:var(--bc-radius);
+  background:var(--bc-bg);color:var(--bc-text);box-shadow:none;
+}
+#brief-app textarea{resize:vertical;min-height:84px}
+#brief-app input[type=text]:focus,#brief-app textarea:focus,
+#brief-app button:focus-visible,#brief-app input[type=range]:focus-visible{outline:2px solid var(--bc-brand);outline-offset:2px}
+#brief-app input[type=range]{width:100%;accent-color:var(--bc-brand);margin:0}
+#brief-app .bc-chips{display:flex;flex-wrap:wrap;gap:8px}
+#brief-app .bc-chip{
+  font-size:14px;padding:7px 14px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--bc-border);background:var(--bc-bg);color:var(--bc-text);
+}
+#brief-app .bc-chip:hover{border-color:var(--bc-brand);background:var(--bc-bg);color:var(--bc-text)}
+#brief-app .bc-chip[aria-pressed="true"],
+#brief-app .bc-chip[aria-pressed="true"]:hover{background:var(--bc-brand);color:var(--bc-on-brand);border-color:var(--bc-brand)}
+#brief-app .bc-chip[aria-pressed="true"]::before{content:"✓ ";font-weight:600}
+#brief-app .bc-chip.bc-rank[aria-pressed="true"]::before{content:none}
+#brief-app .bc-rk{
+  display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
+  border-radius:50%;background:var(--bc-on-brand);color:var(--bc-brand);
+  font-size:12px;font-weight:600;margin-right:6px;
+}
+#brief-app .bc-hint{font-size:13px;color:var(--bc-muted);margin:6px 0 0}
+#brief-app .bc-err{font-size:13px;color:var(--bc-danger);margin:6px 0 0}
+#brief-app .bc-warn{font-size:13px;color:var(--bc-warning);background:var(--bc-warning-soft);padding:8px 12px;border-radius:var(--bc-radius);margin:8px 0 0}
+#brief-app .bc-range-row{display:flex;align-items:center;gap:14px}
+#brief-app .bc-range-val{font-size:22px;font-weight:600;min-width:52px;text-align:right}
+#brief-app .bc-range-ends{display:flex;justify-content:space-between;font-size:13px;color:var(--bc-muted);margin-top:4px}
+#brief-app .bc-scale{display:grid;grid-template-columns:120px minmax(0,1fr) 120px;gap:12px;align-items:center;margin-bottom:12px;font-size:14px;color:var(--bc-muted)}
+#brief-app .bc-scale .bc-l{text-align:right}
+#brief-app .bc-addrow{display:flex;gap:8px;margin-top:10px}
+#brief-app .bc-addrow input{flex:1}
+#brief-app .bc-btn{
+  font-size:15px;padding:10px 18px;border-radius:var(--bc-radius);cursor:pointer;
+  border:1px solid var(--bc-border);background:var(--bc-bg);color:var(--bc-text);
+}
+#brief-app .bc-btn:hover{border-color:var(--bc-brand);background:var(--bc-bg);color:var(--bc-text)}
+#brief-app .bc-btn-primary,#brief-app .bc-btn-primary:hover{background:var(--bc-brand);color:var(--bc-on-brand);border-color:var(--bc-brand)}
+#brief-app .bc-navrow{display:flex;justify-content:space-between;gap:12px;margin-top:8px}
+#brief-app .bc-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+#brief-app .bc-card{border:1px solid var(--bc-border);border-radius:14px;padding:24px;margin-top:16px}
+#brief-app .bc-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0 8px}
+#brief-app .bc-kpi{background:var(--bc-surface);border-radius:var(--bc-radius);padding:12px 14px}
+#brief-app .bc-k{font-size:13px;color:var(--bc-muted)}
+#brief-app .bc-v{font-size:18px;font-weight:600;margin-top:2px}
+#brief-app .bc-bar{position:relative;height:6px;border-radius:3px;background:var(--bc-border)}
+#brief-app .bc-bar span{position:absolute;top:-5px;width:16px;height:16px;border-radius:50%;background:var(--bc-brand)}
+#brief-app .bc-tag{display:inline-block;font-size:13px;padding:4px 12px;border-radius:999px;background:var(--bc-surface);border:1px solid var(--bc-border);margin:0 6px 6px 0}
+#brief-app .bc-tag.bc-to{background:var(--bc-brand-soft);border-color:var(--bc-brand-soft);color:var(--bc-brand)}
+#brief-app .bc-row{display:grid;grid-template-columns:200px minmax(0,1fr);gap:12px;font-size:14px;padding:6px 0;border-bottom:1px solid var(--bc-surface)}
+#brief-app .bc-row .bc-k{color:var(--bc-muted)}
+#brief-app .bc-vig{display:flex;gap:8px;font-size:14px;margin:0 0 8px}
+#brief-app .bc-msg{font-size:13px;color:var(--bc-muted);min-height:20px;margin-top:6px}
+@media (max-width:560px){
+  #brief-app .bc-scale{grid-template-columns:80px minmax(0,1fr) 80px}
+  #brief-app .bc-row{grid-template-columns:1fr}
+}
+@media print{
+  body *{visibility:hidden !important}
+  #brief-app,#brief-app *{visibility:visible !important}
+  #brief-app{position:absolute;left:0;top:0;width:100%;max-width:none;padding:0}
+  #brief-app .bc-no-print{display:none !important}
+  #brief-app .bc-card{border:none;padding:0;margin:0}
+  #brief-app .bc-kpi{border:1px solid var(--bc-border)}
+  #brief-app .bc-h3{break-after:avoid}
+  #brief-app .bc-row,#brief-app .bc-vig{break-inside:avoid}
+}
+/* v1.1 : logo */
+#brief-app .bc-logo{display:block;max-width:200px;max-height:56px;width:auto;height:auto;margin:0 0 14px}
