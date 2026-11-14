@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap");
 #brief-app{
   --bc-brand:#3E5A7F; --bc-brand-soft:#E8EEF5; --bc-on-brand:#FFFFFF;
   --bc-text:#1F2933; --bc-muted:#5B6670; --bc-border:#D5DBE1;
@@ -136,3 +137,71 @@
 @keyframes bc-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (max-width:560px){#brief-app .bc-card{padding:20px}#brief-app .bc-title{font-size:24px}}
 @media print{#brief-app .bc-card{box-shadow:none}#brief-app .bc-sh{border-bottom:1px solid var(--bc-border)}#bc-step>*{animation:none}}
+
+/* v1.3 : palette papier + indigo, cartes pastel, bascules, arc, aperçu, mobile */
+#brief-app{--bc-brand:#3D3BF3;--bc-text:#16181D;--bc-muted:#5E6068;--bc-border:#D9D3C7;--bc-surface:#F7F4EE;--bc-radius:14px;--bc-ring:#ECE8DF;
+  --bc-font:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--bc-head:"Space Grotesk",Inter,system-ui,sans-serif;max-width:1040px}
+#brief-app .bc-title,#brief-app .bc-h,#brief-app .bc-h3,#brief-app .bc-v,#brief-app .bc-tpl-t,#brief-app .bc-tpl-n,#brief-app .bc-range-val{font-family:var(--bc-head)}
+#brief-app .bc-hero{font-size:34px;line-height:1.1;letter-spacing:-.02em;margin-bottom:24px}
+#brief-app .bc-card{max-width:820px;margin-left:auto;margin-right:auto}
+#brief-app #bc-nav .bc-actions,#brief-app #bc-nav .bc-msg{max-width:820px;margin-left:auto;margin-right:auto}
+#brief-app .bc-link{border:0;background:none;padding:0;margin-left:12px;color:var(--bc-brand);text-decoration:underline;font-size:12px;text-transform:none;letter-spacing:0;cursor:pointer}
+/* choix du modèle */
+#brief-app .bc-tpls{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+#brief-app .bc-tpl{border:0;border-radius:26px;min-height:220px;padding:22px;box-shadow:none;gap:10px;color:var(--bc-text)}
+#brief-app .bc-tpl.bc-p0,#brief-app .bc-tpl.bc-p0:hover{background:#FCE3D2;color:var(--bc-text)}
+#brief-app .bc-tpl.bc-p1,#brief-app .bc-tpl.bc-p1:hover{background:#DCDCFB;color:var(--bc-text)}
+#brief-app .bc-tpl.bc-p2,#brief-app .bc-tpl.bc-p2:hover{background:#C4EDE5;color:var(--bc-text)}
+#brief-app .bc-tpl.bc-p3,#brief-app .bc-tpl.bc-p3:hover{background:#FFB3AD;color:var(--bc-text)}
+#brief-app .bc-tpl:hover{box-shadow:0 14px 30px rgba(22,24,29,.14)}
+#brief-app .bc-tpl-n{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.7);display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+#brief-app .bc-tpl-t{color:var(--bc-text);font-size:19px;line-height:1.15}
+#brief-app .bc-tpl-m{color:#3A3C42}
+#brief-app .bc-tpl-go{font-size:14px;font-weight:600}
+/* bascules */
+#brief-app .bc-toggles{background:#fff;border-radius:20px;box-shadow:var(--bc-shadow);padding:2px 8px 2px 16px}
+#brief-app .bc-trow{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:58px;font-size:16px;border-bottom:1px solid #EFEBE2;cursor:pointer}
+#brief-app .bc-trow:last-child{border:0}
+#brief-app .bc-sw{width:54px;height:34px;border-radius:17px;border:0;padding:0;background:var(--bc-border);position:relative;flex:none;cursor:pointer;transition:background .2s}
+#brief-app .bc-sw::after{content:"";position:absolute;top:3px;left:3px;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}
+#brief-app .bc-sw.bc-on{background:var(--bc-brand)}
+#brief-app .bc-sw.bc-on::after{left:23px}
+/* contrôle segmenté */
+#brief-app .bc-seg{display:flex;gap:4px;background:var(--bc-ring);border-radius:999px;padding:4px}
+#brief-app .bc-segb{flex:1;border:0;background:transparent;padding:11px 8px;border-radius:999px;font-weight:600;font-size:15px;cursor:pointer}
+#brief-app .bc-segb.bc-on{background:#fff;color:var(--bc-brand);box-shadow:0 1px 4px rgba(22,24,29,.15)}
+/* sélecteur en arc */
+#brief-app .bc-arc{position:relative;margin:4px 0 0}
+#brief-app .bc-arcl{position:absolute;top:0;bottom:0;right:0;width:64px;border-left:2px solid #C4BDAE;border-radius:100% 0 0 100%/50% 0 0 50%}
+#brief-app .bc-arch{position:absolute;width:54px;height:24px;border-radius:12px;background:#2B2D33;transition:top .25s}
+#brief-app .bc-arcb{position:absolute;left:0;display:flex;justify-content:flex-end;align-items:center;gap:12px;border:0;background:none;padding:0;cursor:pointer;opacity:.85;color:var(--bc-text)}
+#brief-app .bc-arcl2{font-size:16px;font-weight:500;color:var(--bc-muted);text-align:right}
+#brief-app .bc-arcp{width:64px;height:56px;border-radius:22px;background:var(--bc-ring);border:2px solid transparent;display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--bc-brand);flex:none}
+#brief-app .bc-arcb:hover .bc-arcp{border-color:var(--bc-brand)}
+#brief-app .bc-arcb.bc-on{opacity:1}
+#brief-app .bc-arcb.bc-on .bc-arcl2{background:#fff;border:1px solid var(--bc-border);border-radius:999px;padding:6px 14px;color:var(--bc-text);font-weight:600}
+#brief-app .bc-arcb.bc-on .bc-arcp{background:var(--bc-brand-soft);border-color:var(--bc-brand)}
+/* aperçu du brief en construction */
+#brief-app .bc-split{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:48px;align-items:start}
+#brief-app .bc-live{position:sticky;top:16px;background:#fff;border-radius:24px;padding:24px;box-shadow:var(--bc-shadow)}
+#brief-app .bc-live-t{display:block;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--bc-brand);margin-bottom:8px}
+#brief-app .bc-lr{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-bottom:1px solid #EFEBE2;font-size:14px;overflow-wrap:anywhere}
+#brief-app .bc-lr:last-of-type{border:0}
+@media (min-width:900px){#brief-app #bc-nav .bc-navrow{max-width:calc(100% - 368px)}}
+/* confirmation d'envoi */
+#brief-app .bc-sent{display:flex;gap:12px;align-items:center;background:#16181D;color:#fff;border-radius:16px;padding:14px 18px;margin:16px auto 0;max-width:820px}
+#brief-app .bc-ok{width:28px;height:28px;border-radius:50%;background:#FFD84D;color:#16181D;display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+/* smartphone : navigation flottante, cibles tactiles */
+@media (max-width:899px){
+  #brief-app .bc-split{display:block}
+  #brief-app .bc-live{display:none}
+  #brief-app .bc-chip{min-height:44px}
+  #brief-app #bc-nav:has(.bc-navrow){position:sticky;bottom:12px;z-index:5}
+  #brief-app #bc-nav .bc-navrow{background:#16181D;border-radius:999px;padding:8px;margin:12px 0 0;box-shadow:0 10px 30px rgba(22,24,29,.28)}
+  #brief-app #bc-nav .bc-navrow .bc-btn{border:0;background:transparent;color:#fff}
+  #brief-app #bc-nav .bc-navrow .bc-btn-primary{background:var(--bc-brand)}
+  #brief-app #bc-nav .bc-navrow>span{display:none}
+  #brief-app .bc-actions .bc-btn{flex:1 1 calc(50% - 8px)}
+}
+@media (max-width:560px){#brief-app .bc-tpls{grid-template-columns:1fr 1fr;gap:10px}#brief-app .bc-tpl{padding:16px;min-height:200px}#brief-app .bc-hero{font-size:28px}}
+@media print{#brief-app .bc-sent{display:none}}

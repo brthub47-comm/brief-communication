@@ -35,6 +35,7 @@
   const uid = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
     : "b" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
   function save() {
+    updateLive();
     try { localStorage.setItem(CONFIG.storageKey, JSON.stringify({ st: st, cur: cur })); } catch (e) {}
   }
   // Ne reprend d'une source externe que les clés connues et de même type.
@@ -71,8 +72,57 @@
   function focusHeading() { const h = el("step").querySelector("h3"); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }
   function toTop() { app.scrollIntoView({ behavior: "smooth", block: "start" }); }
 
+  // ---- Contrôles v1.3 : bascules, contrôle segmenté, sélecteur en arc ----
+  function toggles(f) {
+    const v = st[f.k];
+    return '<div class="bc-toggles" role="group" aria-labelledby="bc-lbl-' + f.k + '">' + f.o.map(o => {
+      const on = v.includes(o);
+      return '<div class="bc-trow"><span>' + esc(o) + '</span><button type="button" class="bc-sw' + (on ? " bc-on" : "") + '" role="switch" aria-checked="' + on + '" aria-label="' + esc(o) + '" data-c="' + f.k + '" data-v="' + esc(o) + '"></button></div>';
+    }).join("") + '</div>';
+  }
+  function segmented(f) {
+    const v = st[f.k];
+    return '<div class="bc-seg" role="radiogroup" aria-labelledby="bc-lbl-' + f.k + '">' + f.o.map(o =>
+      '<button type="button" role="radio" aria-checked="' + (v === o) + '" class="bc-segb' + (v === o ? " bc-on" : "") + '" data-c="' + f.k + '" data-v="' + esc(o) + '">' + esc(o) + '</button>').join("") + '</div>';
+  }
+  function arc(f) {
+    const v = st[f.k], n = f.o.length, H = 68, W = 64, sel = f.o.indexOf(v);
+    const pos = i => { const u = 2 * ((i + 0.5) / n - 0.5); return { u: u, off: Math.round(Math.sqrt(1 - u * u) * W) }; };
+    let h = '<div class="bc-arc" role="radiogroup" aria-labelledby="bc-lbl-' + f.k + '" style="height:' + n * H + 'px"><span class="bc-arcl" aria-hidden="true"></span>';
+    if (sel >= 0) h += '<span class="bc-arch" aria-hidden="true" style="top:' + (sel * H + H / 2 - 12) + 'px;right:' + (pos(sel).off - 27) + 'px"></span>';
+    f.o.forEach((o, i) => {
+      const p = pos(i), on = i === sel;
+      h += '<button type="button" role="radio" aria-checked="' + on + '" class="bc-arcb' + (on ? " bc-on" : "") + '" style="top:' + i * H + 'px;height:' + H + 'px;right:' + (p.off + 41) + 'px" data-c="' + f.k + '" data-v="' + esc(o) + '"><span class="bc-arcl2" style="transform:rotate(' + Math.round(p.u * 6) + 'deg)">' + esc(o) + '</span><span class="bc-arcp">' + (on ? "✓" : i + 1) + '</span></button>';
+    });
+    return h + '</div>';
+  }
+  function liveHtml() {
+    const rows = [];
+    STEPS.forEach(x => x.f.forEach(f => {
+      if (f.type === "scales" || (f.type === "range" && st[f.k] === f.v)) return;
+      fmt(f).forEach(r => { if (r[1] && r[1] !== "–") rows.push(r); });
+    }));
+    return '<span class="bc-live-t">Votre brief en construction</span>' + (rows.length
+      ? rows.slice(0, 8).map(r => '<div class="bc-lr"><span class="bc-k">' + esc(r[0]) + '</span><span>' + esc(String(r[1]).slice(0, 90)) + '</span></div>').join("")
+      : '<p class="bc-hint">Vos réponses apparaîtront ici au fil de l’eau.</p>');
+  }
+  function updateLive() { const a = app.querySelector(".bc-live"); if (a && st._t) a.innerHTML = liveHtml(); }
+  function sentBanner() {
+    msg("");
+    const c = app.querySelector(".bc-card"); if (!c) return;
+    const o = app.querySelector(".bc-sent"); if (o) o.remove();
+    c.insertAdjacentHTML("beforebegin", '<div class="bc-sent" role="status" tabindex="-1"><span class="bc-ok" aria-hidden="true">✓</span><span><b>Brief envoyé à l\'équipe.</b> Vous pouvez encore le modifier et le renvoyer.</span></div>');
+    app.querySelector(".bc-sent").focus({ preventScroll: true }); toTop();
+  }
+
   function chips(f) {
     const v = st[f.k];
+    if (f.type === "multi" && !f.max) return toggles(f);
+    if (f.type === "one") {
+      const L = Math.max.apply(null, f.o.map(o => o.length));
+      if (f.o.length <= 3 && L <= 14) return segmented(f);
+      if (f.o.length >= 4 && f.o.length <= 6 && L <= 24) return arc(f);
+    }
     const opts = f.type === "words" ? WORDS.concat(v.filter(x => !WORDS.includes(x))) : f.o;
     return '<div class="bc-chips" role="group" aria-labelledby="bc-lbl-' + f.k + '">' + opts.map(o => {
       const sel = f.type === "one" ? v === o : v.includes(o);
@@ -114,9 +164,13 @@
     el("prog").innerHTML = STEPS.map((s, i) => '<span class="' + (i <= cur ? "bc-on" : "") + '"></span>').join("");
     if (cur >= STEPS.length) { renderBrief(); return; }
     const s = STEPS[cur];
-    el("step").innerHTML = '<p class="bc-stepno">Étape ' + (cur + 1) + ' sur ' + STEPS.length + '</p><h3 class="bc-h">' + esc(s.t) + '</h3>' + s.f.map(field).join("") + (cur === 0 ? logoField() : "");
+const mins = Math.max(1, Math.round((STEPS.length - cur) * (TPL().min || 10) / STEPS.length));
+    el("step").innerHTML = '<div class="bc-split"><div class="bc-main"><p class="bc-stepno">Étape ' + (cur + 1) + ' sur ' + STEPS.length + ' · ' + esc(s.t) + ' · environ ' + mins + ' min'
+      + (cur === 0 ? '<button type="button" class="bc-link" id="bc-chg">Changer de modèle</button>' : "") + '</p><h3 class="bc-h">' + esc(s.t) + '</h3>'
+      + s.f.map(field).join("") + (cur === 0 ? logoField() : "")
+      + '</div><aside class="bc-live" aria-live="off" aria-label="Votre brief en construction">' + liveHtml() + '</aside></div>';
     el("nav").innerHTML = '<div class="bc-navrow">'
-      + (cur > 0 ? '<button type="button" class="bc-btn" id="bc-prev">← Retour</button>' : '<span><button type="button" class="bc-btn" id="bc-impb">Importer un brief</button><input type="file" id="bc-imp" accept=".json,application/json" hidden><button type="button" class="bc-btn" id="bc-chg">Changer de modèle</button></span>')
+      + (cur > 0 ? '<button type="button" class="bc-btn" id="bc-prev">← Retour</button>' : '<span><button type="button" class="bc-btn" id="bc-impb">Importer un brief</button><input type="file" id="bc-imp" accept=".json,application/json" hidden></span>')
       + '<button type="button" class="bc-btn bc-btn-primary" id="bc-next">' + (fromBrief ? "Retour au brief" : cur === STEPS.length - 1 ? "Générer le brief" : "Suivant →") + '</button></div>';
     bind();
     if (focusSel) { const f = app.querySelector(focusSel); if (f) f.focus(); }
@@ -161,6 +215,7 @@
       inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); add(); } });
       inp.addEventListener("input", () => setErr(k));
     });
+    root.querySelectorAll(".bc-trow").forEach(r => r.addEventListener("click", e => { if (!e.target.closest("button")) r.querySelector("button").click(); }));
     bindImport(); bindLogo();
     const chg = document.getElementById("bc-chg");
     if (chg) chg.addEventListener("click", () => { setT(""); render(); toTop(); });
@@ -207,9 +262,9 @@
 
   function renderChooser() {
     el("prog").innerHTML = "";
-    el("step").innerHTML = '<h3 class="bc-h">De quel brief avez-vous besoin ?</h3><div class="bc-tpls">'
-      + Object.keys(TPLS).map(k => '<button type="button" class="bc-tpl" data-t="' + esc(k) + '"><span class="bc-tpl-t">' + esc(TPLS[k].t)
-        + '</span><span class="bc-tpl-d">' + esc(TPLS[k].d) + '</span><span class="bc-tpl-m">' + TPLS[k].steps.length + ' étapes · ' + esc(TPLS[k].min) + ' min</span></button>').join("") + '</div>';
+    el("step").innerHTML = '<h3 class="bc-h bc-hero">De quel brief avez-vous besoin ?</h3><div class="bc-tpls">'
+      + Object.keys(TPLS).map((k, i) => '<button type="button" class="bc-tpl bc-p' + (i % 4) + '" data-t="' + esc(k) + '"><span class="bc-tpl-n">0' + (i + 1) + '</span><span class="bc-tpl-t">' + esc(TPLS[k].t)
+        + '</span><span class="bc-tpl-d">' + esc(TPLS[k].d) + '</span><span class="bc-tpl-m">' + TPLS[k].steps.length + ' étapes · ' + esc(TPLS[k].min) + ' min</span><span class="bc-tpl-go">Commencer →</span></button>').join("") + '</div>';
     el("nav").innerHTML = '<div class="bc-navrow"><span><button type="button" class="bc-btn" id="bc-impb">Importer un brief</button><input type="file" id="bc-imp" accept=".json,application/json" hidden></span></div>';
     el("step").querySelectorAll("[data-t]").forEach(b => b.addEventListener("click", () => { setT(b.dataset.t); cur = 0; render(); toTop(); }));
     bindImport();
@@ -382,7 +437,7 @@
     fetch(CONFIG.endpoint, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(Object.assign({ token: CONFIG.token }, payload())) })
       .then(r => r.json())
-      .then(j => msg(j.ok ? "Brief envoyé à l'équipe." : "Envoi refusé (" + (j.error || "erreur") + "). Sauvegardez le .json et transmettez-le."))
+      .then(j => j.ok ? sentBanner() : msg("Envoi refusé (" + (j.error || "erreur") + "). Sauvegardez le .json et transmettez-le."))
       .catch(() => msg("Envoi impossible. Sauvegardez le .json et transmettez-le."));
   }
   function copyText(t, ok) {
