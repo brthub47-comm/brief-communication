@@ -170,17 +170,6 @@
 #brief-app .bc-seg{display:flex;gap:4px;background:var(--bc-ring);border-radius:999px;padding:4px}
 #brief-app .bc-segb{flex:1;border:0;background:transparent;padding:11px 8px;border-radius:999px;font-weight:600;font-size:15px;cursor:pointer}
 #brief-app .bc-segb.bc-on{background:#fff;color:var(--bc-brand);box-shadow:0 1px 4px rgba(22,24,29,.15)}
-/* sélecteur en arc */
-#brief-app .bc-arc{position:relative;margin:4px 0 0}
-#brief-app .bc-arcl{position:absolute;top:0;bottom:0;right:0;width:64px;border-left:2px solid #C4BDAE;border-radius:100% 0 0 100%/50% 0 0 50%}
-#brief-app .bc-arch{position:absolute;width:54px;height:24px;border-radius:12px;background:#2B2D33;transition:top .25s}
-#brief-app .bc-arcb{position:absolute;left:0;display:flex;justify-content:flex-end;align-items:center;gap:12px;border:0;background:none;padding:0;cursor:pointer;opacity:.85;color:var(--bc-text)}
-#brief-app .bc-arcl2{font-size:16px;font-weight:500;color:var(--bc-muted);text-align:right}
-#brief-app .bc-arcp{width:64px;height:56px;border-radius:22px;background:var(--bc-ring);border:2px solid transparent;display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--bc-brand);flex:none}
-#brief-app .bc-arcb:hover .bc-arcp{border-color:var(--bc-brand)}
-#brief-app .bc-arcb.bc-on{opacity:1}
-#brief-app .bc-arcb.bc-on .bc-arcl2{background:#fff;border:1px solid var(--bc-border);border-radius:999px;padding:6px 14px;color:var(--bc-text);font-weight:600}
-#brief-app .bc-arcb.bc-on .bc-arcp{background:var(--bc-brand-soft);border-color:var(--bc-brand)}
 /* aperçu du brief en construction */
 #brief-app .bc-split{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:48px;align-items:start}
 #brief-app .bc-live{position:sticky;top:16px;background:#fff;border-radius:24px;padding:24px;box-shadow:var(--bc-shadow)}
@@ -217,7 +206,6 @@
 #brief-app .bc-kpi{background:var(--bc-tint)}
 #brief-app .bc-sh{border-bottom-color:var(--bc-tint)}
 #brief-app .bc-seg{background:var(--bc-tint)}
-#brief-app .bc-arcb.bc-on .bc-arcp{background:var(--bc-tint)}
 #brief-app .bc-chip:hover{background:var(--bc-tint)}
 
 /* v1.6 : brief final sur smartphone (onglets + barre d'action flottante) */
@@ -245,4 +233,29 @@
   #brief-app[data-tab="export"] .bc-kpis,#brief-app[data-tab="export"] .bc-card .bc-intro{display:none}
   #brief-app[data-tab="export"] .bc-card{padding-bottom:12px}
   #brief-app .bc-tabb{white-space:nowrap;font-size:13px;padding:10px 4px}
+}
+
+/* v1.7 : cartes de choix, mise en page durcie pour smartphone */
+#brief-app{overflow-x:clip}
+#brief-app .bc-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px}
+#brief-app .bc-choice{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;min-height:56px;padding:12px 16px;
+  border:1.5px solid var(--bc-border);border-radius:16px;background:#fff;color:var(--bc-text);font-size:16px;line-height:1.35;cursor:pointer;
+  overflow-wrap:anywhere;transition:border-color .15s,background .15s,transform .1s}
+#brief-app .bc-choice:hover{border-color:var(--bc-brand);background:#fff;color:var(--bc-text)}
+#brief-app .bc-choice:active{transform:scale(.98)}
+#brief-app .bc-choice.bc-on,#brief-app .bc-choice.bc-on:hover{background:var(--bc-tint);border-color:var(--bc-brand);font-weight:600}
+#brief-app .bc-tick{flex:none;width:24px;height:24px;border-radius:50%;background:var(--bc-brand);color:#fff;font-size:14px;line-height:24px;text-align:center;opacity:0;transform:scale(.6);transition:opacity .15s,transform .15s}
+#brief-app .bc-choice.bc-on .bc-tick{opacity:1;transform:none}
+#brief-app .bc-trow:active,#brief-app .bc-chip:active{transform:scale(.98)}
+#brief-app .bc-row{grid-template-columns:200px minmax(0,1fr)}
+#brief-app .bc-row span,#brief-app .bc-v,#brief-app .bc-h,#brief-app .bc-intro,#brief-app .bc-lr span,#brief-app .bc-tpl-t,#brief-app .bc-tpl-d,#brief-app .bc-trow span{overflow-wrap:anywhere}
+#brief-app .bc-kpis{grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr))}
+@media (max-width:560px){
+  #brief-app .bc-row{grid-template-columns:minmax(0,1fr)}
+  #brief-app .bc-scale{grid-template-columns:84px minmax(0,1fr) 84px;font-size:13px;gap:8px}
+  #brief-app .bc-scale span{overflow-wrap:anywhere}
+}
+@media screen and (max-width:899px){
+  #brief-app input[type=text],#brief-app textarea{font-size:16px}   /* évite le zoom automatique d'iOS au clic sur un champ */
+  #brief-app[data-tab] .bc-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
 }

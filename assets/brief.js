@@ -56,7 +56,6 @@
     app.style.setProperty("--bc-brand", own ? CONFIG.brandColor : (T && T.c ? T.c.deep : "#3D3BF3"));
     app.style.setProperty("--bc-tint", T && T.c ? T.c.tint : "#ECE8DF");
   }
-  const isMobile = () => !!window.matchMedia && window.matchMedia("(max-width:899px)").matches;
   function load() {
     st = fresh(); cur = 0;
     try {
@@ -92,16 +91,13 @@
     return '<div class="bc-seg" role="radiogroup" aria-labelledby="bc-lbl-' + f.k + '">' + f.o.map(o =>
       '<button type="button" role="radio" aria-checked="' + (v === o) + '" class="bc-segb' + (v === o ? " bc-on" : "") + '" data-c="' + f.k + '" data-v="' + esc(o) + '">' + esc(o) + '</button>').join("") + '</div>';
   }
-  function arc(f) {
-    const v = st[f.k], n = f.o.length, H = 68, W = 64, sel = f.o.indexOf(v);
-    const pos = i => { const u = 2 * ((i + 0.5) / n - 0.5); return { u: u, off: Math.round(Math.sqrt(1 - u * u) * W) }; };
-    let h = '<div class="bc-arc" role="radiogroup" aria-labelledby="bc-lbl-' + f.k + '" style="height:' + n * H + 'px"><span class="bc-arcl" aria-hidden="true"></span>';
-    if (sel >= 0) h += '<span class="bc-arch" aria-hidden="true" style="top:' + (sel * H + H / 2 - 12) + 'px;right:' + (pos(sel).off - 27) + 'px"></span>';
-    f.o.forEach((o, i) => {
-      const p = pos(i), on = i === sel;
-      h += '<button type="button" role="radio" aria-checked="' + on + '" class="bc-arcb' + (on ? " bc-on" : "") + '" style="top:' + i * H + 'px;height:' + H + 'px;right:' + (p.off + 41) + 'px" data-c="' + f.k + '" data-v="' + esc(o) + '"><span class="bc-arcl2" style="transform:rotate(' + Math.round(p.u * 6) + 'deg)">' + esc(o) + '</span><span class="bc-arcp">' + (on ? "✓" : i + 1) + '</span></button>';
-    });
-    return h + '</div>';
+  // Choix unique : cartes sélectionnables, une par option (lisibles, tactiles, accessibles).
+  function options(f) {
+    const v = st[f.k];
+    return '<div class="bc-choices" role="radiogroup" aria-labelledby="bc-lbl-' + f.k + '">' + f.o.map(o => {
+      const on = v === o;
+      return '<button type="button" role="radio" aria-checked="' + on + '" class="bc-choice' + (on ? " bc-on" : "") + '" data-c="' + f.k + '" data-v="' + esc(o) + '"><span>' + esc(o) + '</span><span class="bc-tick" aria-hidden="true">✓</span></button>';
+    }).join("") + '</div>';
   }
   function liveHtml() {
     const rows = [];
@@ -128,7 +124,7 @@
     if (f.type === "one") {
       const L = Math.max.apply(null, f.o.map(o => o.length));
       if (f.o.length <= 3 && L <= 14) return segmented(f);
-      if (f.o.length >= 4 && f.o.length <= 6 && L <= 24 && isMobile()) return arc(f);
+      return options(f);
     }
     const opts = f.type === "words" ? WORDS.concat(v.filter(x => !WORDS.includes(x))) : f.o;
     return '<div class="bc-chips" role="group" aria-labelledby="bc-lbl-' + f.k + '">' + opts.map(o => {
@@ -478,8 +474,4 @@ const mins = Math.max(1, Math.round((STEPS.length - cur) * (TPL().min || 10) / S
   load();
   render();
   ready = true;
-  if (window.matchMedia) {   // l'arc n'existe que sur mobile : on rafraîchit au passage du seuil
-    const mq = window.matchMedia("(max-width:899px)"), onMq = () => { if (st._t && cur < STEPS.length) render(); };
-    if (mq.addEventListener) mq.addEventListener("change", onMq); else if (mq.addListener) mq.addListener(onMq);
-  }
 })();
