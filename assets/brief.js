@@ -109,7 +109,8 @@
       ? rows.slice(0, 8).map(r => '<div class="bc-lr"><span class="bc-k">' + esc(r[0]) + '</span><span>' + esc(String(r[1]).slice(0, 90)) + '</span></div>').join("")
       : '<p class="bc-hint">Vos réponses apparaîtront ici au fil de l’eau.</p>');
   }
-  function updateLive() { const a = app.querySelector(".bc-live"); if (a && st._t) a.innerHTML = liveHtml(); }
+  let liveT = 0;
+  function updateLive() { clearTimeout(liveT); liveT = setTimeout(() => { const a = app.querySelector(".bc-live"); if (a && st._t) a.innerHTML = liveHtml(); }, 150); }
   function sentBanner() {
     msg("");
     const c = app.querySelector(".bc-card"); if (!c) return;
@@ -163,6 +164,13 @@
   }
 
   function render(focusSel) {
+    const box = el("step"), y = window.scrollY;
+    box.classList.toggle("bc-still", !!focusSel);
+    if (focusSel) box.style.minHeight = box.offsetHeight + "px";
+    renderInner(focusSel);
+    if (focusSel) { window.scrollTo(0, y); requestAnimationFrame(() => { box.style.minHeight = ""; }); }
+  }
+  function renderInner(focusSel) {
     delete app.dataset.tab;
     if (!st._t) { renderChooser(); return; }
     el("prog").innerHTML = STEPS.map((s, i) => '<span class="' + (i <= cur ? "bc-on" : "") + '"></span>').join("");
@@ -177,7 +185,7 @@ const mins = Math.max(1, Math.round((STEPS.length - cur) * (TPL().min || 10) / S
       + (cur > 0 ? '<button type="button" class="bc-btn" id="bc-prev">← Retour</button>' : '<span><button type="button" class="bc-btn" id="bc-impb">Importer un brief</button><input type="file" id="bc-imp" accept=".json,application/json" hidden></span>')
       + '<button type="button" class="bc-btn bc-btn-primary" id="bc-next">' + (fromBrief ? "Retour au brief" : cur === STEPS.length - 1 ? "Générer le brief" : "Suivant →") + '</button></div>';
     bind();
-    if (focusSel) { const f = app.querySelector(focusSel); if (f) f.focus(); }
+    if (focusSel) { const f = app.querySelector(focusSel); if (f) f.focus({ preventScroll: true }); }
     else if (ready) focusHeading();
     save();
   }
@@ -203,6 +211,13 @@ const mins = Math.max(1, Math.round((STEPS.length - cur) * (TPL().min || 10) / S
           if (f.max && a.length >= f.max) { setErr(k, f.max + " choix maximum. Retirez-en un d'abord."); return; }
           a.push(v);
         }
+      }
+      if ((f.type === "one" && k !== "droits") || (f.type === "multi" && !f.max)) {
+        root.querySelectorAll('[data-c="' + k + '"]').forEach(b => {
+          const on = f.type === "one" ? st[k] === b.dataset.v : st[k].indexOf(b.dataset.v) >= 0;
+          b.classList.toggle("bc-on", on); b.setAttribute("aria-checked", on);
+        });
+        setErr(k, ""); save(); return;
       }
       render('[data-c="' + k + '"][data-v="' + CSS.escape(v) + '"]');
     }));

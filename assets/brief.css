@@ -259,3 +259,6 @@
   #brief-app input[type=text],#brief-app textarea{font-size:16px}   /* évite le zoom automatique d'iOS au clic sur un champ */
   #brief-app[data-tab] .bc-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* v1.8 : l'animation d'entrée ne joue qu'au changement d'étape, jamais pendant une sélection */
+#bc-step.bc-still>*{animation:none}
