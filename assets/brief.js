@@ -19,7 +19,7 @@
   const FIELDS = {};
   Object.keys(TPLS).forEach(k => TPLS[k].steps.forEach(x => x.f.forEach(f => { FIELDS[f.k] = f; })));
   const el = id => document.getElementById("bc-" + id);
-  let st = {}, cur = 0, briefText = "", lastVig = [], ready = false, fromBrief = false;
+  let st = {}, cur = 0, briefText = "", lastVig = [], ready = false, fromBrief = false, briefTab = "resume";
 
   function fresh() {
     const s = {};
@@ -167,6 +167,7 @@
   }
 
   function render(focusSel) {
+    delete app.dataset.tab;
     if (!st._t) { renderChooser(); return; }
     el("prog").innerHTML = STEPS.map((s, i) => '<span class="' + (i <= cur ? "bc-on" : "") + '"></span>').join("");
     if (cur >= STEPS.length) { renderBrief(); return; }
@@ -340,22 +341,33 @@ const mins = Math.max(1, Math.round((STEPS.length - cur) * (TPL().min || 10) / S
       + (s.auj.length ? s.auj : ["non renseigné"]).map(w => '<span class="bc-tag">' + esc(w) + '</span>').join("")
       + '<span aria-hidden="true" style="margin:0 8px 0 2px">→</span>'
       + s.dem.map(w => '<span class="bc-tag bc-to">' + esc(w) + '</span>').join("") + '</div>' : "";
+    const tabs = [["resume", "Résumé"]].concat(v.length ? [["vig", "Vigilances (" + v.length + ")"]] : [], [["export", "Exporter"]]);
+    if (!tabs.some(x => x[0] === briefTab)) briefTab = "resume";
+    app.dataset.tab = briefTab;
+    const tabsHtml = '<div class="bc-tabs bc-no-print" role="tablist">' + tabs.map(x => '<button type="button" role="tab" class="bc-tabb' + (x[0] === briefTab ? " bc-on" : "") + '" aria-selected="' + (x[0] === briefTab) + '" data-bt="' + x[0] + '">' + esc(x[1]) + '</button>').join("") + '</div>';
+    const vigBlock = v.length ? '<p class="bc-h3">Points de vigilance</p>' + v.map(x => '<p class="bc-vig"><span aria-hidden="true" style="color:var(--bc-warning)">⚠</span><span>' + esc(x) + '</span></p>').join("") : "";
+    const secsHtml = secs.map(x => '<p class="bc-h3 bc-sh"><span>' + esc(x.h) + '</span><button type="button" class="bc-edit bc-no-print" data-go="' + x.i + '">Modifier</button></p>'
+      + x.r.map(r => '<div class="bc-row"><span class="bc-k">' + esc(r[0]) + '</span><span>' + esc(r[1]) + '</span></div>').join("")).join("");
     el("step").innerHTML = '<div class="bc-card"><div class="bc-brandrow">' + logoHtml()
       + (s._logo ? '<img class="bc-clogo" src="' + esc(s._logo) + '" alt="Logo de ' + esc(s.nom) + '">' : "") + '</div>'
       + '<p class="bc-stepno">' + esc(T.t) + ' · ' + date + '</p><h3 class="bc-h" style="margin-bottom:4px">' + esc(s.nom) + '</h3><p class="bc-intro" style="margin-bottom:8px">' + esc(s[T.lead]) + '</p>'
       + '<div class="bc-kpis">' + kp("Besoin", need) + (F.curseur ? kp("Ampleur", s.curseur + "/10", level(s.curseur)) : "") + kp("Public n°1", pub)
       + (F.budget ? kp("Budget et délai", s.budget || "À définir", s.delai || "–") : kp("Délai", s.delai || "–")) + '</div>'
-      + bars + tags
-      + (v.length ? '<p class="bc-h3">Points de vigilance</p>' + v.map(x => '<p class="bc-vig"><span aria-hidden="true" style="color:var(--bc-warning)">⚠</span><span>' + esc(x) + '</span></p>').join("") : "")
-      + secs.map(x => '<p class="bc-h3 bc-sh"><span>' + esc(x.h) + '</span><button type="button" class="bc-edit bc-no-print" data-go="' + x.i + '">Modifier</button></p>'
-        + x.r.map(r => '<div class="bc-row"><span class="bc-k">' + esc(r[0]) + '</span><span>' + esc(r[1]) + '</span></div>').join("")).join("")
-      + '</div>';
+      + tabsHtml + '<div class="bc-pn bc-pn-vig" role="tabpanel">' + vigBlock + '</div><div class="bc-pn bc-pn-resume" role="tabpanel">' + bars + tags + secsHtml + '</div></div>';
     const b = (id, t, p) => '<button type="button" class="bc-btn' + (p ? " bc-btn-primary" : "") + '" id="bc-' + id + '">' + t + '</button>';
-    el("nav").innerHTML = '<div class="bc-actions">'
+    const acts = '<div class="bc-actions">'
       + (CONFIG.endpoint ? b("send", "Envoyer à l'équipe", 1) : "") + b("pdf", "Télécharger en PDF", !CONFIG.endpoint)
       + b("docx", "Word (.docx)") + b("md", "Markdown (.md)") + b("json", "Sauvegarder (.json)") + b("cp", "Copier le texte")
       + b("link", "Copier un lien de partage") + b("ed", "Tout modifier") + b("rs", "Recommencer")
       + '</div><p class="bc-msg" id="bc-msg" role="status"></p>';
+    el("step").insertAdjacentHTML("beforeend", '<div class="bc-pn bc-pn-export bc-no-print">' + acts + '</div>');
+    el("nav").innerHTML = `<div class="bc-fab"><span>Brief prêt</span><button type="button" id="bc-fabb">${CONFIG.endpoint ? "Envoyer à l'équipe" : "Télécharger en PDF"}</button></div>`;
+    el("fabb").addEventListener("click", CONFIG.endpoint ? send : () => window.print());
+    el("step").querySelectorAll("[data-bt]").forEach(b => b.addEventListener("click", () => {
+      briefTab = b.dataset.bt; app.dataset.tab = briefTab;
+      el("step").querySelectorAll("[data-bt]").forEach(x => { x.classList.toggle("bc-on", x === b); x.setAttribute("aria-selected", x === b); });
+      toTop();
+    }));
     el("step").querySelectorAll("[data-go]").forEach(x => x.addEventListener("click", () => { cur = +x.dataset.go; fromBrief = true; render(); toTop(); }));
     el("pdf").addEventListener("click", () => window.print());
     el("cp").addEventListener("click", () => copyText(briefText, "Texte copié"));

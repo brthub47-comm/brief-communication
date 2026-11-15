@@ -144,7 +144,7 @@
 #brief-app .bc-title,#brief-app .bc-h,#brief-app .bc-h3,#brief-app .bc-v,#brief-app .bc-tpl-t,#brief-app .bc-tpl-n,#brief-app .bc-range-val{font-family:var(--bc-head)}
 #brief-app .bc-hero{font-size:34px;line-height:1.1;letter-spacing:-.02em;margin-bottom:24px}
 #brief-app .bc-card{max-width:820px;margin-left:auto;margin-right:auto}
-#brief-app #bc-nav .bc-actions,#brief-app #bc-nav .bc-msg{max-width:820px;margin-left:auto;margin-right:auto}
+#brief-app .bc-pn-export{max-width:820px;margin-left:auto;margin-right:auto}
 #brief-app .bc-link{border:0;background:none;padding:0;margin-left:12px;color:var(--bc-brand);text-decoration:underline;font-size:12px;text-transform:none;letter-spacing:0;cursor:pointer}
 /* choix du modèle */
 #brief-app .bc-tpls{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
@@ -219,3 +219,30 @@
 #brief-app .bc-seg{background:var(--bc-tint)}
 #brief-app .bc-arcb.bc-on .bc-arcp{background:var(--bc-tint)}
 #brief-app .bc-chip:hover{background:var(--bc-tint)}
+
+/* v1.6 : brief final sur smartphone (onglets + barre d'action flottante) */
+#brief-app .bc-tabs,#brief-app .bc-fab{display:none}
+@media screen and (max-width:899px){
+  #brief-app .bc-tabs{display:flex;gap:4px;background:var(--bc-tint);border-radius:999px;padding:4px;margin:20px 0 4px}
+  #brief-app .bc-tabb{flex:1;border:0;background:transparent;padding:10px 6px;border-radius:999px;font-weight:600;font-size:14px;cursor:pointer;color:var(--bc-text)}
+  #brief-app .bc-tabb.bc-on{background:#fff;color:var(--bc-brand);box-shadow:0 1px 4px rgba(22,24,29,.15)}
+  #brief-app[data-tab] .bc-pn{display:none}
+  #brief-app[data-tab="resume"] .bc-pn-resume,#brief-app[data-tab="vig"] .bc-pn-vig,#brief-app[data-tab="export"] .bc-pn-export{display:block}
+  #brief-app .bc-pn-export{margin-top:16px}
+  #brief-app .bc-pn-export .bc-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:0}
+  #brief-app .bc-pn-export .bc-btn{display:flex;justify-content:space-between;align-items:center;text-align:left;padding:16px 18px;border-radius:16px;background:#fff;flex:none}
+  #brief-app .bc-pn-export .bc-btn::after{content:"→";color:var(--bc-brand)}
+  #brief-app .bc-pn-export #bc-send{display:none}
+  #brief-app .bc-pn-export .bc-btn-primary,#brief-app .bc-pn-export .bc-btn-primary:hover{background:#fff;color:var(--bc-text);border-color:var(--bc-border)}
+  #brief-app #bc-nav:has(.bc-fab){position:sticky;bottom:12px;z-index:5}
+  #brief-app .bc-fab{display:flex;align-items:center;justify-content:space-between;background:#16181D;color:#fff;border-radius:999px;padding:8px 8px 8px 22px;margin-top:12px;box-shadow:0 10px 30px rgba(22,24,29,.28)}
+  #brief-app .bc-fab button{border:0;background:var(--bc-brand);color:#fff;border-radius:999px;padding:14px 24px;font-weight:600;font-size:15px;cursor:pointer}
+  /* brief final : on gagne de la place pour le contenu */
+  #brief-app[data-tab]>header .bc-intro,#brief-app[data-tab] #bc-prog{display:none}
+  #brief-app[data-tab]>header{padding-bottom:8px;margin-bottom:12px}
+  #brief-app[data-tab] .bc-kpis{grid-template-columns:1fr 1fr;gap:8px}
+  #brief-app[data-tab] .bc-kpi:last-child:nth-child(odd){grid-column:1/-1}
+  #brief-app[data-tab="export"] .bc-kpis,#brief-app[data-tab="export"] .bc-card .bc-intro{display:none}
+  #brief-app[data-tab="export"] .bc-card{padding-bottom:12px}
+  #brief-app .bc-tabb{white-space:nowrap;font-size:13px;padding:10px 4px}
+}
